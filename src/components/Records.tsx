@@ -69,9 +69,9 @@ const Record = React.memo(({ editable = false, ...record }: Record) => {
               key={index}
               style={{ paddingLeft: 50, color: theme.palette.common.black }}
               component='a'
-              href={link.actionLink ?? ''}
+              href={link.actionLink ?? undefined}
             >
-              <ListItemText primary={link.value} />
+              <Icon style={{marginRight: 5}}>insert_link</Icon><ListItemText primary={link.value} />
             </ListItem>
           ))}
         </List>

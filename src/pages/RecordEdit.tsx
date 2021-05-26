@@ -52,7 +52,7 @@ const RecordDetails = () => {
   }
 
   React.useEffect(() => {
-    // get record by id
+    // get record by id   
     const record = state.records.find((r) => r.id === params.id)
     // sync record data to the form
     if (record) {
@@ -67,7 +67,7 @@ const RecordDetails = () => {
   const onSave = async (data: FormRecord) => {
     // console.log(data)
     if (user && data) {
-      const updatedRecord = await updateRecord(params.id, data).catch((e) =>
+      const updatedRecord = await updateRecord(params.id, user.uid, data).catch((e) =>
         console.error(e)
       )
       if (!updatedRecord) return

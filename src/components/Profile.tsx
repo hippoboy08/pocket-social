@@ -15,11 +15,9 @@ import Pocket from '../AppTypes'
 import { isEmpty } from '../utilities'
 
 interface ProfileProps extends Pocket.UserProfile {
-  editable?: boolean
+  // editable?: boolean
 }
-const Profile = React.memo(({ editable = false, ...profile }: ProfileProps) => {
-  const history = useHistory()
-
+const Profile = React.memo(({ ...profile }: ProfileProps) => {
   return isEmpty(profile) ? null : (
     <Card style={{ boxShadow: 'none' }}>
       <div
@@ -47,23 +45,12 @@ const Profile = React.memo(({ editable = false, ...profile }: ProfileProps) => {
           {`${profile.nationality} ${profile.profession}`}
         </Typography>
         <Typography variant='h6' component='h2'>
-          {`${profile.dob.toLocaleDateString('en-GB')}`}
+          {`${profile.dob.toLocaleDateString('en-US', {month: 'long', day: 'numeric'})}`}
         </Typography>
         <Typography variant='body2' color='textSecondary' component='p'>
           {profile.bio}
         </Typography>
       </CardContent>
-      {editable && (
-        <CardActions>
-          <Button
-            size='small'
-            fullWidth
-            onClick={() => history.push('user/edit')}
-          >
-            <Icon fontSize='large'>edit</Icon>
-          </Button>
-        </CardActions>
-      )}
     </Card>
   )
 })

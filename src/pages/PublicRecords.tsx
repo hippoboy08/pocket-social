@@ -3,7 +3,6 @@ import { useRouteMatch } from 'react-router-dom'
 import { Action, useStore } from '../common/StoreProvider'
 import Profile from '../components/Profile'
 import Records from '../components/Records'
-import QRCode from 'qrcode.react'
 import useFirestore from '../hooks/useFirestore'
 
 const PublicRecords = () => {
@@ -32,7 +31,7 @@ console.log(process.env.PUBLIC_URL)
   return (
     <>
       {/* Public records */}
-      <QRCode value ={`${process.env.PUBLIC_URL}/users/${match.params.id}`} />
+      
       <Profile {...state.userProfile} />
       <Records records={state.records} />
     </>

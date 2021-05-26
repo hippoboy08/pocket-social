@@ -19,18 +19,22 @@ const useFirestore = () => {
   /** Update a record by Id. */
   const updateRecord = useCallback(
     async (
-      recordId: string,
+      recordId: string | 'new',
+      userId: string,
       newRecord: Partial<Omit<Pocket.Record, 'id' | 'userId'>>
     ) => {
       if (db) {
         try {
-          await db
+          const docRef = db
             ?.collection('records')
-            .doc(recordId)
-            .update({
-              ...newRecord,
-            })
-          const updatedRecord = { id: recordId, ...newRecord }
+            .doc(recordId === 'new' ? undefined : recordId)
+
+          const recordToUpdate = { userId: userId, ...newRecord }
+
+          await docRef.set({
+            ...recordToUpdate,
+          })
+          const updatedRecord = { id: recordId, ...recordToUpdate }
           return updatedRecord
         } catch (err) {
           throw Error(err)
