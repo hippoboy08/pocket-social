@@ -51,7 +51,7 @@ const TabPanel = React.memo(
 )
 
 const Manage = () => {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const [state, dispatch] = useStore()
   const { getUserProfile } = useFirestore()
   const [loading, setLoading] = useState(true)
@@ -80,42 +80,42 @@ const Manage = () => {
   }
 
   return (
-    <>
-      <Paper square>
-        <Tabs
-          value={activeTab}
-          onChange={handleTabChange}
-          variant='fullWidth'
-          TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
-        >
-          <Tab value='profile' icon={<Icon>person</Icon>} label='My Profile' />
-          <Tab
-            value='records'
-            icon={<Icon>view_list</Icon>}
-            label='My Records'
-          />
-        </Tabs>
-        <Progress visible={loading} />
+    <Paper square>
+      <Button fullWidth onClick={() => signOut()}>
+          <Icon>power_settings_new</Icon>
+        </Button>
+      <Tabs
+        value={activeTab}
+        onChange={handleTabChange}
+        variant='fullWidth'
+        TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
+      >
+        <Tab value='profile' icon={<Icon>person</Icon>} label='My Profile' />
+        <Tab value='records' icon={<Icon>view_list</Icon>} label='My Records' />
+      </Tabs>
+      <Progress visible={loading} />
 
-        <TabPanel value='profile' activeValue={activeTab}>
-        <QRCode size={80} value ={`${process.env.REACT_APP_HOST_DOMAIN}/users/${user?.uid}`} />
-          <Profile {...state.userProfile} />
-          <Button
-            size='small'
-            fullWidth
-            onClick={() => history.push('user/edit')}
-          >
-            <Icon fontSize='large'>edit</Icon>
-          </Button>
-        </TabPanel>
-        <TabPanel value='records' activeValue={activeTab}>
-          <Records records={state.records} editable={true} />
-          <Button fullWidth onClick={() => history.push('records/new')}>
-            <Icon>add</Icon>
-          </Button>
-        </TabPanel>
-      </Paper>
-    </>
+      <TabPanel value='profile' activeValue={activeTab}>
+        <QRCode
+          size={80}
+          value={`${process.env.REACT_APP_HOST_DOMAIN}/users/${user?.uid}`}
+        />
+        <Profile {...state.userProfile} />
+        <Button
+          size='small'
+          fullWidth
+          onClick={() => history.push('user/edit')}
+        >
+          <Icon fontSize='large'>edit</Icon>
+        </Button>
+      </TabPanel>
+      <TabPanel value='records' activeValue={activeTab}>
+        <Records records={state.records} editable={true} />
+        <Button fullWidth onClick={() => history.push('records/new')}>
+          <Icon>add</Icon>
+        </Button>
+      </TabPanel>
+    </Paper>
   )
 }
 

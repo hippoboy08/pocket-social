@@ -10,9 +10,9 @@ const readUserData = (): firebase.User => {
   try {
     const jsonUser = localStorage.getItem(storageKey)
     let user = null
-    if(jsonUser) {
-       user = JSON.parse(jsonUser)
-      ;(async () =>{
+    if (jsonUser) {
+      user = JSON.parse(jsonUser)
+      ;(async () => {
         await firebase.auth().currentUser?.getIdToken(true)
       })()
     }
@@ -24,8 +24,8 @@ const readUserData = (): firebase.User => {
 }
 interface AuthContextProps {
   user: firebase.User | null
-  // signIn: () => Promise<firebase.User | null>
-  signIn: () => Promise<void>
+  signIn: (email: string, password: string) => Promise<firebase.User | null>
+  signOut: () => Promise<void>
 }
 const AuthContext = React.createContext<AuthContextProps>(
   {} as AuthContextProps
@@ -37,14 +37,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const history = useHistory()
   const location = useLocation()
   const { from } = (location.state as { from: { pathname: string } }) || {
-    from: { pathname: '/' },
+    from: { pathname: '/manage' },
   }
 
   /** Authenticate user. */
-  const signIn = async (
-    email: string = 'hippoboy08@gmail.com',
-    password: string = 'password'
-  ) => {
+  const signIn = async (email: string, password: string) => {
     try {
       const user = (
         await firebaseApp.auth().signInWithEmailAndPassword(email, password)
@@ -54,15 +51,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Update app-scoped user data.
       setUser(user)
       history.replace(from)
-      // return user
+      return user
     } catch (err) {
       // console.log(err.message)
       throw Error(err)
     }
   }
 
+  /** Log out. */
+  const signOut = async () => {
+    if (!user || user.uid !== firebaseApp.auth().currentUser?.uid)
+      throw Error('User is already logged out!')
+
+    try {
+      await firebaseApp.auth().signOut()
+      localStorage.removeItem(storageKey)
+      setUser(null)
+      history.replace('/login')
+    } catch (error) {
+      console.error(error)
+      throw Error(error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContext.Provider value={{ user, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )

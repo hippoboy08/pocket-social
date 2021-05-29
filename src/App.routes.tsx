@@ -2,16 +2,15 @@ import React from 'react'
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom'
 import { useAuth } from './common/AuthProvider'
 import RecordDetails from './pages/RecordEdit'
-import Records from './components/Records'
 import Home from './pages/Home'
-import Login from './pages/Login'
 import Manage from './pages/Manage'
 import PublicRecords from './pages/PublicRecords'
 import ProfileEdit from './pages/ProfileEdit'
+import Login from './pages/Login'
 
 const NoMatch = () => {
   return (
-    <Redirect to={{ pathname: '/'}} />
+    <Redirect to={{ pathname: '/manage'}} />
   )
 }
 interface PrivateRouteProps extends RouteProps {
